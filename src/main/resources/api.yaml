@@ -1,0 +1,162 @@
+openapi: 3.0.3
+
+info:
+  title: Loan Request API
+  description: API for managing personal loan requests
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Loans
+    description: Loan request operations
+
+paths:
+  /loans:
+    post:
+      tags: [Loans]
+      summary: Create new loan request
+      operationId: createLoan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+      responses:
+        '201':
+          description: Loan created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanResponse'
+        '400':
+          description: Invalid input data
+
+    get:
+      tags: [Loans]
+      summary: Get all loan requests
+      operationId: getLoans
+      responses:
+        '200':
+          description: List of loan requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoanResponse'
+
+  /loans/{id}:
+    get:
+      tags: [Loans]
+      summary: Get loan request by ID
+      operationId: getLoanById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Loan found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanResponse'
+        '404':
+          description: Loan not found
+
+  /loans/{id}/status:
+    patch:
+      tags: [Loans]
+      summary: Update loan status
+      operationId: updateLoanStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoanStatus'
+      responses:
+        '200':
+          description: Loan status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanResponse'
+        '400':
+          description: Invalid status transition
+        '404':
+          description: Loan not found
+
+components:
+  schemas:
+    CreateLoanRequest:
+      type: object
+      required:
+        - applicantName
+        - amount
+        - currency
+        - documentId
+      properties:
+        applicantName:
+          type: string
+          example: Jane Doe
+        amount:
+          type: number
+          format: double
+          example: 10000.00
+        currency:
+          type: string
+          example: EUR
+        documentId:
+          type: string
+          example: 12345678A
+
+    UpdateLoanStatus:
+      type: object
+      required:
+        - newStatus
+      properties:
+        newStatus:
+          $ref: '#/components/schemas/LoanStatus'
+
+    LoanResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        applicantName:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+        documentId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/LoanStatus'
+
+    LoanStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - CANCELLED
