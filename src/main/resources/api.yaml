@@ -23,14 +23,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateLoanRequest'
+              $ref: '#/components/schemas/LoanDTO'
       responses:
         '201':
           description: Loan created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanResponse'
+                $ref: '#/components/schemas/LoanDTO'
         '400':
           description: Invalid input data
 
@@ -46,7 +46,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/LoanResponse'
+                  $ref: '#/components/schemas/LoanDTO'
 
   /loans/{id}:
     get:
@@ -66,7 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanResponse'
+                $ref: '#/components/schemas/LoanDTO'
         '404':
           description: Loan not found
 
@@ -94,7 +94,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanResponse'
+                $ref: '#/components/schemas/LoanDTO'
         '400':
           description: Invalid status transition
         '404':
@@ -102,14 +102,18 @@ paths:
 
 components:
   schemas:
-    CreateLoanRequest:
+    LoanDTO:
       type: object
       required:
         - applicantName
         - amount
         - currency
         - documentId
+        - createdAt
       properties:
+        id:
+          type: string
+          format: uuid
         applicantName:
           type: string
           example: Jane Doe
@@ -123,6 +127,11 @@ components:
         documentId:
           type: string
           example: 12345678A
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/LoanStatus'
 
     UpdateLoanStatus:
       type: object
@@ -130,27 +139,6 @@ components:
         - newStatus
       properties:
         newStatus:
-          $ref: '#/components/schemas/LoanStatus'
-
-    LoanResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        applicantName:
-          type: string
-        amount:
-          type: number
-          format: double
-        currency:
-          type: string
-        documentId:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        status:
           $ref: '#/components/schemas/LoanStatus'
 
     LoanStatus:
