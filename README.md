@@ -4,4 +4,4 @@
   the domain from infrastructure concerns.
 
 
-- Docker desktop must be running
+- In this project I decided to use Basic Auth because it is a simple authentication. Oauth2 did not add any value and it was more complex to run
