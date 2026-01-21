@@ -1,6 +1,7 @@
 package org.com.hub.caixa.service;
 
 import com.hub.caixa.model.LoanDTO;
+import com.hub.caixa.model.UpdateLoanStatusRequest;
 import org.com.hub.caixa.mapper.LoanMapper;
 import org.com.hub.caixa.model.Loan;
 import org.com.hub.caixa.repository.LoanRepository;
@@ -41,16 +42,11 @@ public class LoanService {
                 .map(loanMapper::toDto);
     }
 
-    public Optional<LoanDTO> updateStatus(UUID id, String newStatus) {
+    public Optional<LoanDTO> updateStatus(UUID id, UpdateLoanStatusRequest newStatus) {
         Optional<Loan> optionalLoan = loanRepository.findById(id);
         if (optionalLoan.isPresent()) {
             Loan loan = optionalLoan.get();
-            if ("PENDING".equals(loan.getStatus()) &&
-                    ("APPROVED".equals(newStatus) || "CANCELLED".equals(newStatus))) {
-                loan.setStatus(newStatus);
-            } else if ("APPROVED".equals(loan.getStatus()) && "CANCELLED".equals(newStatus)) {
-                loan.setStatus(newStatus);
-            }
+            loan.setStatus(newStatus.getStatus().getValue());
             return Optional.of(loanMapper.toDto(loanRepository.save(loan)));
         }
         return Optional.empty();

@@ -87,7 +87,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateLoanStatus'
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  description: New status of the loan
+                  enum: [ PENDING, APPROVED, REJECTED, CANCELLED ]
+                  example: APPROVED
       responses:
         '200':
           description: Loan status updated
@@ -109,7 +117,6 @@ components:
         - amount
         - currency
         - documentId
-        - createdAt
       properties:
         id:
           type: string
@@ -129,16 +136,8 @@ components:
           example: 12345678A
         createdAt:
           type: string
-          format: date-time
+          format: timestamp
         status:
-          $ref: '#/components/schemas/LoanStatus'
-
-    UpdateLoanStatus:
-      type: object
-      required:
-        - newStatus
-      properties:
-        newStatus:
           $ref: '#/components/schemas/LoanStatus'
 
     LoanStatus:

@@ -9,4 +9,6 @@ public interface LoanMapper {
     LoanDTO toDto(Loan loan);
 
     Loan toEntity(LoanDTO dto);
+
+
 }
