@@ -25,7 +25,9 @@ public class Loan {
     private String currency;
     @Column(nullable = false)
     private String documentId;
-
     private LocalDateTime createdAt;
     private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
 }
