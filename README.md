@@ -13,3 +13,7 @@
 - Change the authorization to be a stronger one, like OAuth2.
 - Right now the implemented errors are basic ones, but further descriptive ones could be included.
 - More validation errors like what would happen if the amount you pass is negative?
+
+
+## Executing the project
+- To execute the project you have to go to the main class and click run. 
