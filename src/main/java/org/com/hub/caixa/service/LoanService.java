@@ -7,7 +7,6 @@ import org.com.hub.caixa.mapper.LoanMapper;
 import org.com.hub.caixa.model.Loan;
 import org.com.hub.caixa.model.User;
 import org.com.hub.caixa.repository.LoanRepository;
-import org.com.hub.caixa.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoanService {
     private final LoanRepository loanRepository;
-    private final UserService userService;
     private final LoanMapper loanMapper;
 
     public LoanDTO createLoan(LoanDTO dto, UUID userId) {
