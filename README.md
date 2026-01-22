@@ -6,3 +6,10 @@
 - This project works with sdk 17 and jaa 17.
 - It is important to set the Basic Authorization in postman. For each user the username and password is client/client or manager/manager, depending on which role you are using.
 - CreateLoan and GetLoanById need a header with the userId you want to use. Eg.:X-User-id=2a1ab377-5396-4682-b86a-db7bbf07d37c (it is an UUID)
+
+
+## Future Improvements
+- Include docker if you want the application to go to production.
+- Change the authorization to be a stronger one, like OAuth2.
+- Right now the implemented errors are basic ones, but further descriptive ones could be included.
+- More validation errors like what would happen if the amount you pass is negative?
