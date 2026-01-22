@@ -76,7 +76,7 @@ public class SecurityConfig {
         org.com.hub.caixa.model.User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        boolean isManager = currentUser.getRole().equals(UserDTO.RoleEnum.MANAGER);
+        boolean isManager = currentUser.getRole().name().equals(UserDTO.RoleEnum.MANAGER.getValue());
         boolean isOwner = loan.getCreatedBy().getId().equals(userId);
 
         return isManager || isOwner;
