@@ -1,5 +1,10 @@
 package org.com.hub.caixa.security;
 
+import com.hub.caixa.model.UserDTO;
+import lombok.RequiredArgsConstructor;
+import org.com.hub.caixa.model.Loan;
+import org.com.hub.caixa.repository.LoanRepository;
+import org.com.hub.caixa.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,9 +19,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final LoanRepository loanRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,5 +66,19 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    public boolean isOwnerOrManager(UUID loanId, UUID userId) {
+        Optional<Loan> loanOpt = loanRepository.findById(loanId);
+        if (loanOpt.isEmpty()) return false;
+
+        Loan loan = loanOpt.get();
+        org.com.hub.caixa.model.User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isManager = currentUser.getRole().equals(UserDTO.RoleEnum.MANAGER);
+        boolean isOwner = loan.getCreatedBy().getId().equals(userId);
+
+        return isManager || isOwner;
     }
 }

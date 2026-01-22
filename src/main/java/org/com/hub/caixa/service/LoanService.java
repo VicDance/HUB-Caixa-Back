@@ -2,9 +2,12 @@ package org.com.hub.caixa.service;
 
 import com.hub.caixa.model.LoanDTO;
 import com.hub.caixa.model.UpdateLoanStatusRequest;
+import lombok.RequiredArgsConstructor;
 import org.com.hub.caixa.mapper.LoanMapper;
 import org.com.hub.caixa.model.Loan;
+import org.com.hub.caixa.model.User;
 import org.com.hub.caixa.repository.LoanRepository;
+import org.com.hub.caixa.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,19 +17,17 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class LoanService {
     private final LoanRepository loanRepository;
+    private final UserService userService;
     private final LoanMapper loanMapper;
 
-    public LoanService(LoanRepository loanRepository, LoanMapper loanMapper) {
-        this.loanRepository = loanRepository;
-        this.loanMapper = loanMapper;
-    }
-
-    public LoanDTO createLoan(LoanDTO dto) {
+    public LoanDTO createLoan(LoanDTO dto, UUID userId) {
         Loan loan = loanMapper.toEntity(dto);
         loan.setCreatedAt(LocalDateTime.now());
         loan.setStatus("PENDING");
+        loan.setCreatedBy(User.builder().id(userId).build());
         Loan saved = loanRepository.save(loan);
         return loanMapper.toDto(saved);
     }

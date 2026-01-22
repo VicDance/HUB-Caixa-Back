@@ -24,6 +24,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoanDTO'
+      parameters:
+        - name: X-User-Id
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '201':
           description: Loan created successfully
@@ -56,6 +63,12 @@ paths:
       parameters:
         - name: id
           in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-User-Id
+          in: header
           required: true
           schema:
             type: string
@@ -174,6 +187,9 @@ components:
           format: timestamp
         status:
           $ref: '#/components/schemas/LoanStatus'
+        createdBy:
+          type: string
+          format: uuid
 
     UserDTO:
       type: object

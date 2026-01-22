@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.com.hub.caixa.mapper.UserMapper;
 import org.com.hub.caixa.model.User;
 import org.com.hub.caixa.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,22 +16,21 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
 
     public UserDTO createUser(UserDTO dto) {
-        User user = userMapper.tooEntity(dto);
+        User user = userMapper.toEntity(dto);
         userRepository.save(user);
-        return userMapper.tooDto(user);
+        return userMapper.toDto(user);
     }
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
-                .map(userMapper::tooDto)
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public User findById(UUID id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
